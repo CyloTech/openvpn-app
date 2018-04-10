@@ -5,7 +5,7 @@ ENV EXTERNAL_PORT=1194
 
 # Testing: pamtester
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories && \
-    apk add --update openvpn iptables bash easy-rsa openvpn-auth-pam supervisor pamtester nginx && \
+    apk add --update openvpn iptables bash easy-rsa openvpn-auth-pam supervisor pamtester nginx curl && \
     ln -s /usr/share/easy-rsa/easyrsa /usr/local/bin && \
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/* && \
     mkdir -p /etc/nginx/sites-enabled && \
