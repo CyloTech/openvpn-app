@@ -36,7 +36,7 @@ fi
 
 ###########################[ OPENVPN SETUP ]###############################
 
-if [ ! -f /etc/app_configured ]; then
+if [ ! -f /configs/config.ovpn ]; then
     /usr/local/bin/ovpn_genconfig -b -u udp://${DOMAIN}:${EXTERNAL_PORT} -C 'AES-256-CBC' -a 'SHA384'
     /usr/local/bin/ovpn_initpki nopass
     /usr/local/bin/easyrsa build-client-full config nopass
@@ -44,6 +44,13 @@ if [ ! -f /etc/app_configured ]; then
 
     printf "${OPENVPN_USER}:$(openssl passwd -crypt ${OPENVPN_PASSWORD})\n" >> /.htpasswd
     sed -i 's#localhost#'${DOMAIN}'#g' /etc/nginx/sites-enabled/openvpn.conf
+fi
+
+IP_SUBNET=$(ifconfig eth0 | grep inet | awk '{print $2}' | awk -F ':' '{print $2}' | awk -F '.' '{print $1"."$2"."$3".0"}')
+
+if [[ ! $(cat /etc/openvpn/openvpn.conf | grep ${IP_SUBNET}) ]]
+    then
+    echo "push route ${IP_SUBNET} 255.255.255.0" >> /etc/openvpn/openvpn.conf
 fi
 
 ###########################[ MARK INSTALLED ]###############################
