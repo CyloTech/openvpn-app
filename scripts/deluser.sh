@@ -18,7 +18,7 @@ USERNAME=${1}
 
 rm -f /configs/${USERNAME}.ovpn
 rm -f /etc/openvpn/pki/reqs/${USERNAME}.req
-rm -f /etc/openvpn/pki/reqs/${USERNAME}.key
+rm -f /etc/openvpn/pki/private/${USERNAME}.key
 rm -f /etc/openvpn/pki/issued/${USERNAME}.crt
 
 sed '/\b'${USERNAME}':/d' /etc/openvpn/.htpasswd
