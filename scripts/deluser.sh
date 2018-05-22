@@ -18,4 +18,4 @@ USERNAME=${1}
 
 rm -f /configs/${USERNAME}.ovpn
 
-sed '/\b'${USERNAME}':/d' /.htpasswd
+sed '/\b'${USERNAME}':/d' /etc/openvpn/.htpasswd
