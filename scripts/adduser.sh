@@ -18,6 +18,6 @@ USERNAME=${1}
 PASSWORD=${2}
 
 /usr/local/bin/easyrsa build-client-full ${USERNAME} nopass
-/usr/local/bin/ovpn_getclient config > /configs/${USERNAME}.ovpn
+/usr/local/bin/ovpn_getclient ${USERNAME} > /configs/${USERNAME}.ovpn
 
 printf "${USERNAME}:$(openssl passwd -crypt ${PASSWORD})\n" >> /etc/openvpn/.htpasswd

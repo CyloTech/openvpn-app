@@ -16,9 +16,7 @@ fi
 
 USERNAME=${1}
 
+echo yes | /usr/local/bin/ovpn_revokeclient ${USERNAME} remove
 rm -f /configs/${USERNAME}.ovpn
-rm -f /etc/openvpn/pki/reqs/${USERNAME}.req
-rm -f /etc/openvpn/pki/private/${USERNAME}.key
-rm -f /etc/openvpn/pki/issued/${USERNAME}.crt
 
-sed '/\b'${USERNAME}':/d' /etc/openvpn/.htpasswd
+sed -i '/\b'${USERNAME}':/d' /etc/openvpn/.htpasswd
