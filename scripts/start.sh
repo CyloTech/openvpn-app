@@ -53,10 +53,15 @@ fi
 
 IP_SUBNET=$(ifconfig eth0 | grep inet | awk '{print $2}' | awk -F ':' '{print $2}' | awk -F '.' '{print $1"."$2"."$3".0"}')
 
-if [[ ! $(cat /etc/openvpn/openvpn.conf | grep ${IP_SUBNET}) ]]
-    then
-    echo "push route ${IP_SUBNET} 255.255.255.0" >> /etc/openvpn/openvpn.conf
-fi
+# Reset IP subnet in case of migration
+sed -i '/push route/d' /etc/openvpn/openvpn.conf
+echo "push route ${IP_SUBNET} 255.255.255.0" >> /etc/openvpn/openvpn.conf
+
+# Reset ports in case of migration
+while read -r CONFIG
+do
+    sed -i -E "s/remote ${VIRTUAL_HOST} [0-9]*/remote ${VIRTUAL_HOST} ${EXTERNAL_PORT}/g" /configs/${CONFIG}
+done < <(ls -la /configs/ | grep 'ovpn' | awk '{print $9}')
 
 ###########################[ MARK INSTALLED ]###############################
 
