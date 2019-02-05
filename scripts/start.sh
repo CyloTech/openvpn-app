@@ -36,6 +36,9 @@ fi
 
 ###########################[ OPENVPN SETUP ]###############################
 
+# Needed for update
+mkdir /var/tmp/nginx/
+
 # Move this from old version so updates work (can be deleted after first forced update)
 if [ -f /.htpasswd ]; then
     mv /.htpasswd /etc/openvpn/.htpasswd
@@ -54,8 +57,9 @@ fi
 IP_SUBNET=$(ifconfig eth0 | grep inet | awk '{print $2}' | awk -F ':' '{print $2}' | awk -F '.' '{print $1"."$2"."$3".0"}')
 
 # Reset IP subnet in case of migration
+sed -i '/push "route/d' /etc/openvpn/openvpn.conf
 sed -i '/push route/d' /etc/openvpn/openvpn.conf
-echo "push route ${IP_SUBNET} 255.255.255.0" >> /etc/openvpn/openvpn.conf
+echo "push \"route ${IP_SUBNET} 255.255.255.0\"" >> /etc/openvpn/openvpn.conf
 
 # Reset ports in case of migration
 while read -r CONFIG
