@@ -56,6 +56,8 @@ docker run --rm --cap-add=NET_ADMIN \
 - [ ] Web interface is accessible at `http://localhost:8080`
 - [ ] Basic auth works with the provided credentials
 - [ ] `.ovpn` file can be downloaded
+- [ ] After `/scripts/adduser.sh alice <password>`, alice can download `alice.ovpn` but gets 404 for `config.ovpn` and other users' profiles
+- [ ] The install user gets 404 for other users' profiles
 
 ---
 

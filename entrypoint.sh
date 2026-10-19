@@ -50,6 +50,24 @@ if [[ -z "$(ls -A /configs 2>/dev/null)" ]]; then
     sed -i 's#localhost#'${DOMAIN}'#g' /etc/nginx/sites-enabled/openvpn.conf
 fi
 
+# Only the install user may download config.ovpn; every other login gets
+# just its own <username>.ovpn (see nginx-openvpn.conf). Fall back to the
+# first .htpasswd entry, as moduser.sh does, if OPENVPN_USER isn't usable.
+OVPN_OWNER=""
+if [[ "${OPENVPN_USER:-}" =~ ^[A-Za-z0-9_.-]+$ ]] && grep -q "^${OPENVPN_USER}:" /etc/openvpn/.htpasswd 2>/dev/null; then
+    OVPN_OWNER="${OPENVPN_USER}"
+else
+    OVPN_FIRST_USER=$(head -1 /etc/openvpn/.htpasswd 2>/dev/null | cut -d: -f1)
+    if [[ "${OVPN_FIRST_USER}" =~ ^[A-Za-z0-9_.-]+$ ]]; then
+        OVPN_OWNER="${OVPN_FIRST_USER}"
+    fi
+fi
+if [[ -n "${OVPN_OWNER}" ]]; then
+    printf '"%s:/config.ovpn" /config.ovpn;\n' "${OVPN_OWNER}" > /etc/nginx/ovpn-owner.map
+else
+    : > /etc/nginx/ovpn-owner.map
+fi
+
 # Keep ovpn_env.sh in sync with current port/host (handles server migration)
 if [[ -f /etc/openvpn/ovpn_env.sh ]]; then
     sed -i -E "s/^declare -x OVPN_CN=.*/declare -x OVPN_CN='${VIRTUAL_HOST}'/" /etc/openvpn/ovpn_env.sh
