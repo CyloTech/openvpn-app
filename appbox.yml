@@ -29,8 +29,8 @@ app:
 
 image:
   name: "openvpn"
-  version: "2.6.16"
-  tag: "2.6.16"
+  version: "2.6.16-1"
+  tag: "2.6.16-1"
 
 container:
   cmd: null

@@ -221,3 +221,13 @@ docker exec -it openvpn-test bash
 docker stop openvpn-test && docker rm openvpn-test
 docker volume rm openvpn-configs openvpn-data
 ```
+
+---
+
+## Release Gate
+
+Build the candidate on the dedicated builder from the exact pushed commit, then
+run `tools/verify-release.sh <image>` before `docker push`. The gate repeats
+the per-user download checks against an upgrade from the pinned 2.6.16 image
+and a fresh install, and only passes when the registry confirms the new tag is
+absent.
