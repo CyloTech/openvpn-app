@@ -63,6 +63,12 @@ if [ -d "$OPENVPN/ccd" ]; then
     addArg "--client-config-dir" "$OPENVPN/ccd"
 fi
 
+addArg "--dev" "tun"
+addArg "--mode" "server"
+addArg "--tls-server"
+addArg "--keepalive" "10 120"
+addArg "--data-ciphers" "AES-256-GCM:AES-128-GCM:CHACHA20-POLY1305:AES-256-CBC"
+
 # When using --net=host, use this to specify nat device.
 [ -z "$OVPN_NATDEVICE" ] && OVPN_NATDEVICE=eth0
 
